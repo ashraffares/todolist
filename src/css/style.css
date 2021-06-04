@@ -3,6 +3,10 @@ body {
   padding: 0;
 }
 
+.mt-10px {
+  margin-top: 10px;
+}
+
 .nav {
   display: flex;
   flex-direction: row;
@@ -47,6 +51,7 @@ body {
   padding: 10px;
   font-size: 16px;
   font-weight: bolder;
+  cursor: pointer;
 }
 
 .sideleft-li:hover {
@@ -98,7 +103,7 @@ body {
 .form-title {
   background-color: orange;
   margin: 0;
-  padding: 0;
+  padding: 2px 10px;
 }
 
 .form-close {

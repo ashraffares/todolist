@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "watch": "webpack --watch",
-    "serve": "webpack serve --mode development --env development --open" 
+    "serve": "webpack serve --mode development --env development --open"
   },
   "keywords": [],
   "author": "",
@@ -16,12 +16,13 @@
     "@babel/core": "^7.14.3",
     "@babel/plugin-transform-modules-commonjs": "^7.14.0",
     "@babel/preset-env": "^7.14.2",
-    "babel-loader": "^8.2.2", 
     "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
     "css-loader": "^5.2.6",
     "eslint": "^7.25.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
+    "sass-loader": "^12.0.0",
     "style-loader": "^2.0.0",
     "stylelint": "^13.12.0",
     "stylelint-config-standard": "^21.0.0",
@@ -34,6 +35,5 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "raw-loader": "^4.0.2"
-    
   }
 }
