@@ -1,4 +1,13 @@
 import '../css/style.css';
+import storage from './storage';
+import dbFactory from './db';
+
+const db = dbFactory.create(storage);
+const projects = db.getProjects();
+if (projects.length <= 0) {
+  db.addProject('main');
+  projects.push('main');
+}
 
 function createProjectForm() {
   const overlayp = document.createElement('div');
@@ -132,10 +141,12 @@ function createTodoForm() {
   project.id = 'project';
   formDiv2.append(project);
 
-  const projectOption = document.createElement('option');
-  projectOption.value = 'main';
-  projectOption.textContent = 'main';
-  project.append(projectOption);
+  projects.forEach((proj) => {
+    const projectOption = document.createElement('option');
+    projectOption.value = proj;
+    projectOption.textContent = proj;
+    project.append(projectOption);
+  });
 
   const priorityLabel = document.createElement('label');
   priorityLabel.classList.add('label');

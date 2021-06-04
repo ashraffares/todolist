@@ -41,6 +41,8 @@ const create = (storage) => {
     return items.filter((item) => item.project === project);
   };
 
+  const getProjects = () => [...projects];
+
   const addItem = (item, project) => {
     item.id = lastIndex;
     item.project = project;
@@ -87,6 +89,7 @@ const create = (storage) => {
   return {
     get,
     getAll,
+    getProjects,
     addItem,
     addProject,
     update,
@@ -95,4 +98,6 @@ const create = (storage) => {
   };
 };
 
-export default create;
+export default {
+  create,
+};
