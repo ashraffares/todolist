@@ -1,6 +1,7 @@
 import '../css/style.css';
 import storage from './storage';
 import dbFactory from './db';
+import Todo from './todo';
 
 const db = dbFactory.create(storage);
 const projects = db.getProjects();
@@ -9,59 +10,7 @@ if (projects.length <= 0) {
   projects.push('main');
 }
 
-function createProjectForm() {
-  const overlayp = document.createElement('div');
-  overlayp.classList.add('overlayp');
-
-  const form = document.createElement('form');
-  form.classList.add('form');
-
-  const formh = document.createElement('div');
-  formh.classList.add('form-h');
-
-  const formtitle = document.createElement('h2');
-  formtitle.classList.add('form-title');
-  formtitle.textContent = 'New Task';
-
-  const formclose = document.createElement('button');
-  formclose.classList.add('form-close');
-  formclose.textContent = 'X';
-
-  formh.appendChild(formtitle);
-  formh.appendChild(formclose);
-
-  const hr = document.createElement('hr');
-
-  const label = document.createElement('label');
-  label.classList.add('label');
-  label.textContent = 'Name';
-  label.htmlFor = 'project';
-
-  const inputp = document.createElement('input');
-  inputp.classList.add('inputs');
-  inputp.id = 'project';
-  inputp.type = 'text';
-
-  const buttonWrap = document.createElement('div');
-  buttonWrap.classList.add('mt-10px');
-
-  const buttonp = document.createElement('button');
-  buttonp.classList.add('button');
-  buttonp.textContent = 'Create Project';
-  buttonWrap.append(buttonp);
-
-  form.appendChild(formh);
-  form.appendChild(hr);
-  form.appendChild(label);
-  form.appendChild(inputp);
-  form.appendChild(buttonWrap);
-
-  overlayp.appendChild(form);
-  document.querySelector('#parent').appendChild(overlayp);
-  return overlayp;
-}
-
-function createTodoForm() {
+function createTodoForm(addToDo) {
   const overlay = document.createElement('div');
   overlay.classList.add('overlay');
 
@@ -78,10 +27,11 @@ function createTodoForm() {
   formTitle.textContent = 'New Task';
   formH.append(formTitle);
 
-  const formClose = document.createElement('button');
+  const formClose = document.createElement('span');
   formClose.classList.add('form-close');
   formClose.textContent = 'X';
   formH.append(formClose);
+  formClose.onclick = () => { overlay.style.display = 'none'; };
 
   form.append(document.createElement('hr'));
 
@@ -98,7 +48,9 @@ function createTodoForm() {
   titleLabel.htmlFor = 'title';
   titleLabel.textContent = 'Title';
   formDiv1.append(titleLabel);
+
   const title = document.createElement('input');
+  title.setAttribute('required', true);
   title.type = 'text';
   title.id = 'title';
   title.classList.add('inputs');
@@ -109,7 +61,9 @@ function createTodoForm() {
   descriptionLabel.htmlFor = 'description';
   descriptionLabel.textContent = 'Description';
   formDiv1.append(descriptionLabel);
+
   const description = document.createElement('textarea');
+  description.setAttribute('required', true);
   description.id = 'description';
   description.setAttribute('rows', '7');
   description.classList.add('inputs');
@@ -125,6 +79,7 @@ function createTodoForm() {
   formDiv2.append(dateLabel);
 
   const date = document.createElement('input');
+  date.setAttribute('required', true);
   date.type = 'date';
   date.id = 'date';
   date.classList.add('inputs');
@@ -136,16 +91,23 @@ function createTodoForm() {
   projectLabel.textContent = 'Project';
   formDiv2.append(projectLabel);
 
-  const project = document.createElement('select');
+  const project = document.createElement('input');
+  project.setAttribute('list', 'projects');
+  project.setAttribute('required', true);
   project.classList.add('inputs');
   project.id = 'project';
   formDiv2.append(project);
 
+  const datalist = document.createElement('datalist');
+  datalist.id = 'projects';
+
+  formDiv2.append(datalist);
+
   projects.forEach((proj) => {
-    const projectOption = document.createElement('option');
-    projectOption.value = proj;
-    projectOption.textContent = proj;
-    project.append(projectOption);
+    const option = document.createElement('option');
+    option.value = proj;
+    option.textContent = proj;
+    datalist.append(option);
   });
 
   const priorityLabel = document.createElement('label');
@@ -155,6 +117,7 @@ function createTodoForm() {
   formDiv2.append(priorityLabel);
 
   const priority = document.createElement('select');
+  priority.setAttribute('required', true);
   priority.classList.add('inputs');
   priority.id = 'priority';
   formDiv2.append(priority);
@@ -178,6 +141,14 @@ function createTodoForm() {
   submitButton.classList.add('button');
   submitButton.textContent = 'Create Task';
   form.append(submitButton);
+
+  form.onsubmit = (e) => {
+    e.preventDefault();
+    const todo = new Todo(title.value, description.value, date.value, priority.value, false);
+    db.addItem(todo, project.value);
+    overlay.style.display = 'none';
+    addToDo(todo, project.value);
+  };
 
   return overlay;
 }
@@ -207,8 +178,6 @@ export default function main() {
   sideleftul.classList.add('sideleft-ul');
 
   const sideleftli = document.createElement('li');
-  sideleftli.classList.add('sideleftli', 'projectform');
-  sideleftli.textContent = '+ New projec';
 
   sideleftul.appendChild(sideleftli);
   sideleft.appendChild(sideleftul);
@@ -216,18 +185,70 @@ export default function main() {
   const sideright = document.createElement('div');
   sideright.classList.add('sideright');
 
+  const siderightul = document.createElement('ul');
+  sideright.appendChild(siderightul);
+
   main.appendChild(sideleft);
   main.appendChild(sideright);
   const parent = document.getElementById('parent');
   parent.appendChild(nav);
   parent.appendChild(main);
 
-  const projectForm = createProjectForm();
-  sideleftli.onclick = () => {
-    projectForm.style.display = 'block';
+  let selectedProject = null;
+
+  const addToDo = (todo, project) => {
+    if (selectedProject === project) {
+      const li = document.createElement('li');
+
+      const title = document.createElement('span');
+      title.textContent = todo.title;
+
+      const date = document.createElement('span');
+      date.textContent = todo.duedate;
+
+      const edit = document.createElement('button');
+      edit.textContent = 'Edit';
+
+      const info = document.createElement('button');
+      info.textContent = 'info';
+
+      const btndelete = document.createElement('button');
+      btndelete.onclick = () => {
+        db.deleteItem(todo.id);
+        window.location.reload();
+      };
+      btndelete.textContent = 'delete';
+      li.appendChild(title);
+      li.appendChild(date);
+      li.appendChild(info);
+      li.appendChild(edit);
+      li.appendChild(btndelete);
+
+      siderightul.appendChild(li);
+    }
   };
 
-  const todoForm = createTodoForm();
+  const addProject = (project) => {
+    const pli = document.createElement('li');
+    pli.classList.add('sideleftli');
+    pli.textContent = project;
+    sideleftul.appendChild(pli);
+    pli.onclick = () => {
+      selectedProject = project;
+      siderightul.innerHTML = '';
+      const todos = db.getAll(project);
+      todos.forEach(todo => {
+        addToDo(todo, project);
+      });
+    };
+  };
+
+  const projects = db.getProjects();
+  projects.forEach(proj => {
+    addProject(proj);
+  });
+
+  const todoForm = createTodoForm(addToDo);
   parent.appendChild(todoForm);
   button.addEventListener('click', () => {
     todoForm.style.display = 'block';
