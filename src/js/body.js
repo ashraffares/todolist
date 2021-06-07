@@ -147,6 +147,9 @@ function createTodoForm(addToDo) {
     const todo = new Todo(title.value, description.value, date.value, priority.value, false);
     db.addItem(todo, project.value);
     overlay.style.display = 'none';
+    if (db.getProjects().indexOf(project.value) < 0) {
+      db.addProject(project.value);
+    }
     addToDo(todo, project.value);
   };
 
@@ -177,19 +180,14 @@ export default function main() {
   const sideleftul = document.createElement('ul');
   sideleftul.classList.add('sideleft-ul');
 
-  const sideleftli = document.createElement('li');
-
-  sideleftul.appendChild(sideleftli);
   sideleft.appendChild(sideleftul);
 
   const sideright = document.createElement('div');
   sideright.classList.add('sideright');
 
-  const siderightul = document.createElement('ul');
-  sideright.appendChild(siderightul);
-
   main.appendChild(sideleft);
   main.appendChild(sideright);
+
   const parent = document.getElementById('parent');
   parent.appendChild(nav);
   parent.appendChild(main);
@@ -198,33 +196,53 @@ export default function main() {
 
   const addToDo = (todo, project) => {
     if (selectedProject === project) {
-      const li = document.createElement('li');
+      const card = document.createElement('div');
+      card.classList.add('card');
+      card.classList.add('m-3');
+      const cardheader = document.createElement('div');
+      cardheader.classList.add('card-header');
+      const cardbody = document.createElement('div');
+      cardbody.classList.add('card-body');
 
-      const title = document.createElement('span');
+      const title = document.createElement('h4');
       title.textContent = todo.title;
+      title.style.display = 'inline';
 
       const date = document.createElement('span');
       date.textContent = todo.duedate;
 
+      const description = document.createElement('p');
+      description.textContent = todo.description;
+      description.classList.add('card-text');
+
+      const priorty = document.createElement('span');
+      priorty.textContent = todo.priorty;
+
       const edit = document.createElement('button');
       edit.textContent = 'Edit';
-
-      const info = document.createElement('button');
-      info.textContent = 'info';
+      edit.classList.add('btn');
+      edit.classList.add('btn-primary');
 
       const btndelete = document.createElement('button');
+      btndelete.classList.add('btn');
+      btndelete.classList.add('btn-danger');
       btndelete.onclick = () => {
         db.deleteItem(todo.id);
         window.location.reload();
       };
       btndelete.textContent = 'delete';
-      li.appendChild(title);
-      li.appendChild(date);
-      li.appendChild(info);
-      li.appendChild(edit);
-      li.appendChild(btndelete);
 
-      siderightul.appendChild(li);
+      cardheader.appendChild(title);
+      cardheader.appendChild(date);
+
+      cardbody.appendChild(description);
+      cardbody.appendChild(priorty);
+      cardbody.appendChild(edit);
+      cardbody.appendChild(btndelete);
+
+      card.appendChild(cardheader);
+      card.appendChild(cardbody);
+      sideright.appendChild(card);
     }
   };
 
@@ -235,7 +253,7 @@ export default function main() {
     sideleftul.appendChild(pli);
     pli.onclick = () => {
       selectedProject = project;
-      siderightul.innerHTML = '';
+      sideright.innerHTML = '';
       const todos = db.getAll(project);
       todos.forEach(todo => {
         addToDo(todo, project);
