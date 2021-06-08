@@ -1,3 +1,4 @@
-import main from './js/body';
+import './css/style.css';
+import ToDoForm from './js/form';
 
-main();
+ToDoForm();

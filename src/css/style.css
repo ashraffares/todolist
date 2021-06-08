@@ -72,22 +72,9 @@ body {
   z-index: 2;
 }
 
-.overlayp {
-  display: none;
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 2;
-}
-
 .form {
   position: relative;
-  top: 25%;
+  top: 10%;
   background-color: #fff;
   width: 80%;
   margin: auto;
@@ -115,7 +102,7 @@ body {
   cursor: pointer;
 }
 
-.formdivcontainer {
+.formcontainer {
   display: flex;
   margin: 10px 0;
 }
@@ -156,4 +143,33 @@ select:focus {
   margin-top: 5px;
   border-radius: 5px;
   border: none;
+}
+
+/* info */
+
+.info {
+  font-family: monospace;
+  background-color: #191919;
+  position: relative;
+  top: 25%;
+  left: 10%;
+  right: 10%;
+  width: 75%;
+  padding: 7px 0;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.info-content {
+  padding: 2px 40px;
+  margin: auto;
+  font-weight: bolder;
+}
+
+.infoh2 {
+  color: #000;
+}
+
+.btninfo {
+  cursor: pointer;
 }
