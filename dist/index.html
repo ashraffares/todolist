@@ -2,68 +2,68 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../src/css/style.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>todolist</title>
+  <title>todolist</title>
 </head>
+
 <body>
- <div id="parent">
-     <div class="nav">
-        <h2 class="navh2">ToDo</h2>
-        <button class="todoform">+</button>
-     </div>
-     <div class="main">
-        <div class="sideleft">
-            <ul class="sideleft-ul">
-            </ul>
+  <div id="parent">
+    <div class="nav">
+      <h2 class="navh2">ToDo</h2>
+      <button class="todoform">+</button>
+    </div>
+    <div class="main">
+      <div class="sideleft">
+        <ul class="sideleft-ul">
+        </ul>
+      </div>
+      <div class="sideright">
+
+      </div>
+    </div>
+
+    <div class="overlay">
+      <form action="" class="form">
+        <div class="form-h">
+          <h2 class="form-title">New Task</h2>
+          <span class="form-close">X</span>
         </div>
-        <div class="sideright">
-          
+        <hr>
+        <div class="formcontainer">
+          <div class="formdiv">
+            <label class="label" for="title">Title</label>
+            <input class="inputs" type="text" id="title" required>
+
+            <label class="label" for="description">Description</label>
+            <textarea class="inputs" name="" rows="7" id="description" required></textarea>
+          </div>
+          <div class="formdiv">
+            <label class="label" for="date">Date</label>
+            <input class="inputs" type="date" id="date" required>
+
+            <label class="label" for="proj">Project</label>
+            <input class="inputs" type="text" id="proj" list="projects" required>
+            <datalist id="projects">
+
+            </datalist>
+            <label class="label" for="priority">priority</label>
+            <select class="inputs" name="" id="priority">
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
         </div>
-     </div>
+        <button class="button">Create Task</button>
+      </form>
+    </div>
+  </div>
 
-     <div class="overlay">
-         <form action="" class="form">
-             <div class="form-h">
-                <h2 class="form-title">New Task</h2>
-                <span class="form-close">X</span>
-             </div> 
-             <hr>
-             <div class="formcontainer">
-                 <div class="formdiv">
-                     <label class="label" for="title">Title</label>
-                     <input class="inputs" type="text" id="title" required>
-
-                     <label class="label" for="description">Description</label>
-                     <textarea class="inputs" name="" rows="7" id="description" required></textarea>
-                 </div>
-                 <div class="formdiv">
-                    <label class="label" for="date">Date</label>
-                    <input class="inputs" type="date" id="date" required>
-
-                    <label class="label" for="proj">Project</label>
-                    <input class="inputs" type="text" id="proj" list="projects" required>
-                    <datalist id="projects">
-                
-                    </datalist>
-                    <label class="label" for="priority">priority</label>
-                    <select class="inputs" name="" id="priority">
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                    </select>
-                 </div>
-             </div>
-             <button class="button">Create Task</button>
-         </form>
-     </div>
-</div>
-
-<script src="../dist/main.js"></script>
+  <script src="./main.js"></script>
 </body>
 
 </html>

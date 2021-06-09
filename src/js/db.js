@@ -3,7 +3,13 @@ import mixin from './mixin';
 const create = (storage) => {
   let items = [];
   let projects = [];
-  let lastIndex = 1;
+  let lastIndex = (() => {
+    const temp = storage.getLastIndex();
+    if (temp) {
+      return parseInt(temp, 10);
+    }
+    return 1;
+  })();
 
   try {
     const text = storage.getItems();

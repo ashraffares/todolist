@@ -1,5 +1,6 @@
 import dbFactory from './db';
 import storage from './storage';
+import Todo from './todo';
 
 const db = dbFactory.create(storage);
 const projects = db.getProjects();
@@ -8,7 +9,55 @@ if (projects.length <= 0) {
   projects.push('Main');
 }
 
-const overlay = document.querySelector('.overlay');
+const todoForm = (() => {
+  const overlay = document.querySelector('.overlay');
+  const form = document.querySelector('.form');
+  const titleInput = form.querySelector('#title');
+  const descriptionInput = form.querySelector('#description');
+  const dateInput = form.querySelector('#date');
+  const projectInput = form.querySelector('#proj');
+  const priorityInput = form.querySelector('#priority');
+
+  const show = (callback, todo) => {
+    overlay.style.display = 'block';
+    if (todo) {
+      titleInput.value = todo.title;
+      descriptionInput.value = todo.description;
+      priorityInput.value = todo.priority;
+      dateInput.value = todo.duedate;
+      projectInput.value = todo.project;
+    } else {
+      titleInput.value = '';
+      descriptionInput.value = '';
+      priorityInput.value = '';
+      dateInput.value = '';
+      projectInput.value = '';
+    }
+    form.onsubmit = () => {
+      overlay.style.display = 'block';
+      form.onsubmit = null;
+      const project = projectInput.value;
+      if (!projects.includes(project)) {
+        db.addProject(project);
+      }
+      const todo = new Todo(
+        titleInput.value, descriptionInput.value, dateInput.value, priorityInput.value, false
+      );
+      callback({
+        todo,
+        project,
+      });
+    };
+  };
+
+  return {
+    show,
+    close: () => {
+      overlay.style.display = 'none';
+      form.onsubmit = null;
+    },
+  };
+})();
 
 const displayinfo = todo => {
   const overlayinfo = document.createElement('div');
@@ -21,7 +70,7 @@ const displayinfo = todo => {
                 <span class="btninfo" onclick='document.location.reload();'>X</span>
             </div>
             <p>project: ${todo.project}</p>
-            <p>Hight: ${todo.proirity}</p>
+            <p>Hight: ${todo.priority}</p>
             <p>date: ${todo.duedate}</p>
             <p>description: ${todo.description}</p>
         </div>
@@ -31,7 +80,7 @@ const displayinfo = todo => {
   overlayinfo.style.display = 'block';
 };
 
-const addToDo = todo => {
+const addToDo = (todo) => {
   const card = document.createElement('div');
   card.classList.add('card');
   card.classList.add('m-3');
@@ -54,6 +103,9 @@ const addToDo = todo => {
   const priorty = document.createElement('span');
   priorty.textContent = todo.priorty;
 
+  const controls = document.createElement('div');
+  controls.classList.add('controls');
+
   const info = document.createElement('button');
   info.textContent = 'Info';
   info.classList.add('btn');
@@ -66,6 +118,14 @@ const addToDo = todo => {
   edit.textContent = 'Edit';
   edit.classList.add('btn');
   edit.classList.add('btn-primary');
+  edit.onclick = () => {
+    todoForm.show((form) => {
+      const temp = form.todo;
+      temp.id = todo.id;
+      temp.project = form.project;
+      db.update(temp);
+    }, todo);
+  };
 
   const btndelete = document.createElement('button');
   btndelete.classList.add('btn');
@@ -81,9 +141,10 @@ const addToDo = todo => {
 
   cardbody.appendChild(description);
   cardbody.appendChild(priorty);
-  cardbody.appendChild(info);
-  cardbody.appendChild(edit);
-  cardbody.appendChild(btndelete);
+  cardbody.append(controls);
+  controls.appendChild(info);
+  controls.appendChild(edit);
+  controls.appendChild(btndelete);
 
   card.appendChild(cardheader);
   card.appendChild(cardbody);
@@ -92,37 +153,7 @@ const addToDo = todo => {
 
 export default function ToDoForm() {
   const ul = document.querySelector('.sideleft-ul');
-  const form = document.querySelector('.form');
   const sideright = document.querySelector('.sideright');
-
-  function Todo(title, description, duedate, proirity, isDone) {
-    this.title = title;
-    this.description = description;
-    this.duedate = duedate;
-    this.proirity = proirity;
-    this.isDone = isDone;
-  }
-
-  const getFormData = (form) => {
-    const title = form.querySelector('#title').value;
-    const description = form.querySelector('#description').value;
-    const date = form.querySelector('#date').value;
-    const project = form.querySelector('#proj').value;
-    const priority = form.querySelector('#priority').value;
-
-    const todo = new Todo(title, description, date, priority, false);
-
-    db.addItem(todo, project);
-    if (!projects.includes(project)) {
-      db.addProject(project);
-    }
-  };
-
-  form.onsubmit = (e) => {
-    e.preventDefault();
-    getFormData(form);
-    overlay.style.display = 'none';
-  };
 
   projects.forEach((proj) => {
     const option = document.createElement('option');
@@ -132,11 +163,13 @@ export default function ToDoForm() {
   });
 
   document.querySelector('.todoform').onclick = () => {
-    overlay.style.display = 'block';
+    todoForm.show((form) => {
+      db.addItem(form.todo, form.project);
+    });
   };
 
   document.querySelector('.form-close').onclick = () => {
-    overlay.style.display = 'none';
+    todoForm.close();
   };
 
   projects.forEach((proj) => {
