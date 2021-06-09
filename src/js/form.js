@@ -85,6 +85,7 @@ const displayinfo = todo => {
 const addToDo = (todo) => {
   const card = document.createElement('div');
   card.classList.add('card');
+  card.classList.add(todo.priority);
 
   const title = document.createElement('h3');
   title.textContent = todo.title;
@@ -98,7 +99,7 @@ const addToDo = (todo) => {
   description.classList.add('card-text');
 
   const priorty = document.createElement('span');
-  priorty.textContent = todo.priorty;
+  priorty.textContent = todo.priority;
 
   const controls = document.createElement('div');
   controls.classList.add('controls');
