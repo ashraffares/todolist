@@ -54,7 +54,8 @@ body {
   cursor: pointer;
 
   &.selected {
-    background-color: #dee7e8;
+    background-color: #000;
+    color: #fff;
   }
 }
 
@@ -63,7 +64,8 @@ body {
 }
 
 /* form */
-.overlay {
+.overlay,
+.overlay2 {
   display: none;
   height: 100%;
   width: 100%;
@@ -176,4 +178,60 @@ select:focus {
 
 .btninfo {
   cursor: pointer;
+}
+
+// card
+
+.card {
+  margin: 10px 10px;
+  display: grid;
+  grid-template-columns: 60% 40%;
+  background-color: #f7f7f7;
+  border-left: 3px solid #000;
+  padding: 10px;
+}
+
+.card > h3 {
+  width: fit-content;
+  margin: auto 0;
+  font-weight: bold;
+}
+
+.card:hover {
+  box-shadow: 2px 2px 4px #555;
+}
+
+.controls {
+  margin: auto;
+}
+
+.controls > button {
+  width: max-content;
+  background-color: orange;
+  color: #000;
+  margin: 0 6px;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-weight: bold;
+}
+
+.controls > span {
+  background-color: #000;
+  color: #fff;
+  margin: 0 6px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 915px) {
+  .card {
+    grid-template-columns: 100%;
+  }
+
+  .controls {
+    border-top: 1px solid lightgray;
+    margin: 0;
+    padding-top: 3px;
+  }
 }

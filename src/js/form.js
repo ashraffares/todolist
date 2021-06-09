@@ -69,7 +69,7 @@ const displayinfo = todo => {
         <div class="info-content">
             <div class="form-h">
                 <h2 class="form-title infoh2">${todo.title}</h2>
-                <span class="btninfo" onclick="${document.querySelector('#info-con').style.display = 'none'}">X</span>
+                <span class="btninfo" onclick="document.querySelector('.info').parentElement.style.display = 'none';">X</span>
             </div>
             <p>project: ${todo.project}</p>
             <p>Hight: ${todo.priority}</p>
@@ -85,13 +85,8 @@ const displayinfo = todo => {
 const addToDo = (todo) => {
   const card = document.createElement('div');
   card.classList.add('card');
-  card.classList.add('m-3');
-  const cardheader = document.createElement('div');
-  cardheader.classList.add('card-header');
-  const cardbody = document.createElement('div');
-  cardbody.classList.add('card-body');
 
-  const title = document.createElement('h4');
+  const title = document.createElement('h3');
   title.textContent = todo.title;
   title.style.display = 'inline';
 
@@ -110,16 +105,12 @@ const addToDo = (todo) => {
 
   const info = document.createElement('button');
   info.textContent = 'Info';
-  info.classList.add('btn');
-  info.classList.add('btn-info');
   info.onclick = () => {
     displayinfo(todo);
   };
 
   const edit = document.createElement('button');
   edit.textContent = 'Edit';
-  edit.classList.add('btn');
-  edit.classList.add('btn-primary');
   edit.onclick = () => {
     todoForm.show((form) => {
       const temp = form.todo;
@@ -130,25 +121,17 @@ const addToDo = (todo) => {
   };
 
   const btndelete = document.createElement('button');
-  btndelete.classList.add('btn');
-  btndelete.classList.add('btn-danger');
   btndelete.textContent = 'delete';
   btndelete.onclick = () => {
     db.deleteItem(todo.id);
   };
-
-  cardheader.appendChild(title);
-  cardheader.appendChild(date);
-
-  cardbody.appendChild(description);
-  cardbody.appendChild(priorty);
-  cardbody.append(controls);
+  controls.appendChild(date);
   controls.appendChild(info);
   controls.appendChild(edit);
   controls.appendChild(btndelete);
 
-  card.appendChild(cardheader);
-  card.appendChild(cardbody);
+  card.appendChild(title);
+  card.append(controls);
 
   todosContainer.append(card);
 };
