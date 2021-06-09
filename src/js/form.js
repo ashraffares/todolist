@@ -169,8 +169,17 @@ export default function ToDoForm() {
 
   projects.forEach((proj) => {
     const li = document.createElement('li');
+    const dproj = document.createElement('p');
+    dproj.classList.add('dproj');
     li.classList.add('sideleftli');
     li.textContent = proj;
+    if (proj !== 'Main') {
+      li.appendChild(dproj);
+    }
+    dproj.onclick = () => {
+      db.deleteProject(proj);
+      document.location.reload();
+    };
     li.onclick = () => {
       selectProject(li);
     };
