@@ -1,4 +1,10 @@
 import mixin from './mixin';
+import eventEmitter from './event-emitter';
+
+const events = {
+  ITEMS_CHANGED: 'items-changed',
+};
+const emitter = eventEmitter();
 
 const create = (storage) => {
   let items = [];
@@ -57,6 +63,7 @@ const create = (storage) => {
     const temp = lastIndex;
     lastIndex += 1;
     storage.setLastIndex(lastIndex);
+    emitter.emit(events.ITEMS_CHANGED);
     return temp;
   };
 
@@ -66,14 +73,17 @@ const create = (storage) => {
   };
 
   const update = (item) => {
+    let updated = false;
     for (let i = 0; i < items.length; i += 1) {
       if (items[i].id === item.id) {
         items[i] = mixin({}, item);
         storage.setItems(JSON.stringify(items));
-        return true;
+        updated = true;
+        break;
       }
     }
-    return false;
+    emitter.emit(events.ITEMS_CHANGED);
+    return updated;
   };
 
   const deleteItem = (id) => {
@@ -81,6 +91,7 @@ const create = (storage) => {
     const result = temp.length < items.length;
     items = temp;
     storage.setItems(JSON.stringify(items));
+    emitter.emit(events.ITEMS_CHANGED);
     return result;
   };
 
@@ -101,6 +112,7 @@ const create = (storage) => {
     update,
     deleteItem,
     deleteProject,
+    addOnItemsChange: (callback) => emitter.subscribe(events.ITEMS_CHANGED, callback),
   };
 };
 

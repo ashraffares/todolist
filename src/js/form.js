@@ -4,6 +4,9 @@ import Todo from './todo';
 
 const db = dbFactory.create(storage);
 const projects = db.getProjects();
+const todosContainer = document.querySelector('.sideright');
+let selectedProject;
+
 if (projects.length <= 0) {
   db.addProject('Main');
   projects.push('Main');
@@ -33,20 +36,19 @@ const todoForm = (() => {
       dateInput.value = '';
       projectInput.value = '';
     }
-    form.onsubmit = () => {
-      overlay.style.display = 'block';
+
+    form.onsubmit = (evt) => {
+      evt.preventDefault();
+      overlay.style.display = 'none';
       form.onsubmit = null;
       const project = projectInput.value;
       if (!projects.includes(project)) {
         db.addProject(project);
       }
       const todo = new Todo(
-        titleInput.value, descriptionInput.value, dateInput.value, priorityInput.value, false
+        titleInput.value, descriptionInput.value, dateInput.value, priorityInput.value, false,
       );
-      callback({
-        todo,
-        project,
-      });
+      callback({ todo, project });
     };
   };
 
@@ -63,11 +65,11 @@ const displayinfo = todo => {
   const overlayinfo = document.createElement('div');
   overlayinfo.classList.add('overlay');
   const infobody = `
-    <div class='info'>
+    <div class='info' id="info-con">
         <div class="info-content">
             <div class="form-h">
                 <h2 class="form-title infoh2">${todo.title}</h2>
-                <span class="btninfo" onclick='document.location.reload();'>X</span>
+                <span class="btninfo" onclick="${document.querySelector('#info-con').style.display = 'none'}">X</span>
             </div>
             <p>project: ${todo.project}</p>
             <p>Hight: ${todo.priority}</p>
@@ -133,7 +135,6 @@ const addToDo = (todo) => {
   btndelete.textContent = 'delete';
   btndelete.onclick = () => {
     db.deleteItem(todo.id);
-    document.location.reload();
   };
 
   cardheader.appendChild(title);
@@ -148,12 +149,22 @@ const addToDo = (todo) => {
 
   card.appendChild(cardheader);
   card.appendChild(cardbody);
-  document.querySelector('.sideright').appendChild(card);
+
+  todosContainer.append(card);
+};
+
+const selectProject = (li) => {
+  if (selectedProject && selectedProject !== li) {
+    selectedProject.classList.remove('selected');
+  }
+  selectedProject = li;
+  selectedProject.classList.add('selected');
+  todosContainer.innerHTML = '';
+  db.getAll(li.textContent).forEach((todo) => addToDo(todo));
 };
 
 export default function ToDoForm() {
   const ul = document.querySelector('.sideleft-ul');
-  const sideright = document.querySelector('.sideright');
 
   projects.forEach((proj) => {
     const option = document.createElement('option');
@@ -177,11 +188,12 @@ export default function ToDoForm() {
     li.classList.add('sideleftli');
     li.textContent = proj;
     li.onclick = () => {
-      sideright.textContent = '';
-      db.getAll(proj).forEach((todo) => {
-        addToDo(todo);
-      });
+      selectProject(li);
     };
     ul.appendChild(li);
   });
 }
+
+db.addOnItemsChange(() => {
+  selectProject(selectedProject);
+});
