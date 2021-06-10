@@ -20,15 +20,19 @@ To get a local copy up and running follow these simple example steps on the comm
 
   # Clone the project from it's github repo.
 
-  $ git clone https://github.com/chasscepts/library
+  $ git clone https://github.com/ashraffares/todolist
 
   # Change directory to the root of project
 
-  $ cd library
+  $ cd todolist
 
   # Install all dev dependencies
 
   $ npm install
+
+  # Run local development server
+
+  $ npm run dev
 
 
 ```
@@ -47,7 +51,7 @@ To get a local copy up and running follow these simple example steps on the comm
 
 Contributions, issues, and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/chasscepts/library/issues).
+Feel free to check the [issues page](https://github.com/ashraffares/todolist/issues).
 
 ## Show your support
 
