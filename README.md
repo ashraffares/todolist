@@ -2,7 +2,7 @@
 
 # Library
 
-> A Library simulation. Users can create and delete books. They can mark a book as either read or unread. It uses localStorage to persist books
+> To-do list app allows the user to manage their to-dos, focusing on using DOM manipulation Webpack assets management.
 
 ![screenshot](./screenshot.png)
 
@@ -32,7 +32,7 @@ To get a local copy up and running follow these simple example steps on the comm
 
   # Run local development server
 
-  $ npm run dev
+  $ npm run serve
 
 
 ```
