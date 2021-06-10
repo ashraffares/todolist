@@ -24,7 +24,7 @@ const prompt = (() => {
   body.append(content);
 
   const controls = document.createElement('div');
-  controls.classList.add('controls');
+  controls.classList.add('confirm-controls');
   body.append(controls);
 
   const yesBtn = document.createElement('button');

@@ -88,7 +88,7 @@ body {
 }
 
 .dim {
-  background-color: rgba($color: #000000, $alpha: 0.7);
+  background-color: rgba($color: #000, $alpha: 0.7);
 }
 
 .center-child {
@@ -110,7 +110,7 @@ body {
     padding: 15px;
   }
 
-  .controls {
+  .confirm-controls {
     display: flex;
     justify-content: flex-end;
 
