@@ -68,7 +68,7 @@ const todoForm = (() => {
   const priorityInput = form.querySelector('#priority');
 
   const show = (callback, todo) => {
-    overlay.style.display = 'block';
+    overlay.classList.add('block');
     if (todo) {
       titleInput.value = todo.title;
       descriptionInput.value = todo.description;
@@ -85,7 +85,7 @@ const todoForm = (() => {
 
     form.onsubmit = (evt) => {
       evt.preventDefault();
-      overlay.style.display = 'none';
+      overlay.classList.remove('block');
       form.onsubmit = null;
       const project = projectInput.value;
       if (!projects.includes(project)) {
@@ -97,11 +97,13 @@ const todoForm = (() => {
       callback({ todo, project });
     };
   };
-
+  const closebtn = () => {
+    overlay.classList.remove('block');
+  };
   return {
     show,
     close: () => {
-      overlay.style.display = 'none';
+      closebtn();
       form.onsubmit = null;
     },
   };
@@ -125,7 +127,7 @@ const displayinfo = todo => {
     </div>`;
   overlayinfo.innerHTML = infobody;
   document.body.appendChild(overlayinfo);
-  overlayinfo.style.display = 'block';
+  overlayinfo.classList.add('block');
   document.querySelector('.btninfo').addEventListener('click', () => { document.querySelector('.overlay0').remove(); });
 };
 
@@ -136,7 +138,7 @@ const addToDo = (todo) => {
 
   const title = document.createElement('h3');
   title.textContent = todo.title;
-  title.style.display = 'inline';
+  title.classList.add('inline');
 
   const date = document.createElement('span');
   date.textContent = todo.duedate;
