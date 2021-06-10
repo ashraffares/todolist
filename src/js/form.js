@@ -178,8 +178,11 @@ export default function ToDoForm() {
       li.appendChild(dproj);
     }
     dproj.onclick = () => {
+      db.getAll(proj).forEach((p) => {
+        db.deleteItem(p.id);
+      });
       db.deleteProject(proj);
-      document.location.reload();
+      li.remove();
     };
     li.onclick = () => {
       selectProject(li);
