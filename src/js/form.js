@@ -4,8 +4,54 @@ import Todo from './todo';
 
 const db = dbFactory.create(storage);
 const projects = db.getProjects();
+
 const todosContainer = document.querySelector('.sideright');
 let selectedProject;
+
+const prompt = (() => {
+  const screen = document.createElement('div');
+  screen.classList.add('screen-cover', 'center-child');
+  const dim = document.createElement('div');
+  dim.classList.add('dim', 'screen-cover');
+  screen.append(dim);
+  const body = document.createElement('div');
+  body.classList.add('center', 'confirm-box');
+  screen.append(body);
+
+  const content = document.createElement('div');
+  content.classList.add('message');
+  content.innerHTML = 'This project will be deleted.<br>Do you wish to continue?';
+  body.append(content);
+
+  const controls = document.createElement('div');
+  controls.classList.add('controls');
+  body.append(controls);
+
+  const yesBtn = document.createElement('button');
+  yesBtn.textContent = 'YES';
+  controls.append(yesBtn);
+  const noBtn = document.createElement('button');
+  noBtn.textContent = 'Cancel';
+  controls.append(noBtn);
+
+  return {
+    confirm: (callback) => {
+      yesBtn.onclick = () => {
+        yesBtn.onclick = null;
+        noBtn.onclick = null;
+        screen.remove();
+        callback(true);
+      };
+      noBtn.onclick = () => {
+        yesBtn.onclick = null;
+        noBtn.onclick = null;
+        screen.remove();
+        callback(false);
+      };
+      document.body.append(screen);
+    },
+  };
+})();
 
 if (projects.length <= 0) {
   db.addProject('Main');
@@ -149,7 +195,52 @@ const selectProject = (li) => {
 };
 
 export default function ToDoForm() {
-  const ul = document.querySelector('.sideleft-ul');
+  const projectsHelper = (() => {
+    const ul = document.querySelector('.sideleft-ul');
+    const addProject = (project) => {
+      const li = document.createElement('li');
+      const dproj = document.createElement('span');
+      dproj.classList.add('dproj');
+      li.classList.add('sideleftli');
+      li.textContent = project;
+
+      if (project !== 'Main') {
+        li.appendChild(dproj);
+      }
+      dproj.onclick = () => {
+        prompt.confirm((response) => {
+          if (response) {
+            db.getAll(project).forEach((p) => {
+              db.deleteItem(p.id);
+            });
+            db.deleteProject(project);
+            li.remove();
+          }
+        });
+      };
+      li.onclick = () => {
+        selectProject(li);
+      };
+      ul.appendChild(li);
+      return li;
+    };
+
+    const getProject = (project) => {
+      const all = ul.childNodes;
+      for (let i = 0; i < all.length; i += 1) {
+        if (all[i].textContent === project) {
+          return all[i];
+        }
+      }
+      return null;
+    };
+
+    return {
+      DOM: ul,
+      addProject,
+      getProject,
+    };
+  })();
 
   projects.forEach((proj) => {
     const option = document.createElement('option');
@@ -160,6 +251,11 @@ export default function ToDoForm() {
 
   document.querySelector('.todoform').onclick = () => {
     todoForm.show((form) => {
+      let li = projectsHelper.getProject(form.project);
+      if (!li) {
+        li = projectsHelper.addProject(form.project);
+      }
+      selectedProject = li;
       db.addItem(form.todo, form.project);
     });
   };
@@ -169,25 +265,7 @@ export default function ToDoForm() {
   };
 
   projects.forEach((proj) => {
-    const li = document.createElement('li');
-    const dproj = document.createElement('p');
-    dproj.classList.add('dproj');
-    li.classList.add('sideleftli');
-    li.textContent = proj;
-    if (proj !== 'Main') {
-      li.appendChild(dproj);
-    }
-    dproj.onclick = () => {
-      db.getAll(proj).forEach((p) => {
-        db.deleteItem(p.id);
-      });
-      db.deleteProject(proj);
-      li.remove();
-    };
-    li.onclick = () => {
-      selectProject(li);
-    };
-    ul.appendChild(li);
+    projectsHelper.addProject(proj);
   });
 }
 
