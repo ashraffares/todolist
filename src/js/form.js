@@ -196,7 +196,7 @@ const selectProject = (li) => {
   db.getAll(li.textContent).forEach((todo) => addToDo(todo));
 };
 
-export default function ToDoForm() {
+const ToDoForm = () => {
   const projectsHelper = (() => {
     const ul = document.querySelector('.sideleft-ul');
     const addProject = (project) => {
@@ -269,7 +269,9 @@ export default function ToDoForm() {
   projects.forEach((proj) => {
     projectsHelper.addProject(proj);
   });
-}
+};
+
+export default ToDoForm;
 
 db.addOnItemsChange(() => {
   selectProject(selectedProject);
