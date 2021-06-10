@@ -63,13 +63,13 @@ const todoForm = (() => {
 
 const displayinfo = todo => {
   const overlayinfo = document.createElement('div');
-  overlayinfo.classList.add('overlay');
+  overlayinfo.classList.add('overlay0');
   const infobody = `
     <div class='info' id="info-con">
         <div class="info-content">
             <div class="form-h">
                 <h2 class="form-title infoh2">${todo.title}</h2>
-                <span class="btninfo" onclick="document.querySelector('.info').parentElement.style.display = 'none';">X</span>
+                <button class="btninfo">X</button>
             </div>
             <p>project: ${todo.project}</p>
             <p>Hight: ${todo.priority}</p>
@@ -80,6 +80,7 @@ const displayinfo = todo => {
   overlayinfo.innerHTML = infobody;
   document.body.appendChild(overlayinfo);
   overlayinfo.style.display = 'block';
+  document.querySelector('.btninfo').addEventListener(onclick, () => console.log('Hello world'))
 };
 
 const addToDo = (todo) => {
