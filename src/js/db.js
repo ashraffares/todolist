@@ -20,8 +20,7 @@ const create = (storage) => {
   try {
     const text = storage.getItems();
     if (text) {
-      const temp = JSON.parse(text);
-      items = temp;
+      items = JSON.parse(text);
     }
   } catch (e) {
     items = [];
@@ -30,11 +29,10 @@ const create = (storage) => {
   try {
     const text = storage.getProjects();
     if (text) {
-      const temp = JSON.parse(text);
-      projects = temp;
+      projects = JSON.parse(text);
     }
   } catch (e) {
-    items = [];
+    projects = [];
   }
 
   const get = (id) => {
