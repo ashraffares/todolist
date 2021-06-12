@@ -1,6 +1,6 @@
 ![](https://img.shields.io/badge/Microverse-blueviolet)
 
-# Library
+# Todolist
 
 > To-do list app allows the user to manage their to-dos, focusing on using DOM manipulation Webpack assets management.
 
